@@ -6,7 +6,8 @@ describe("mention responder", () => {
     const reply = vi.fn();
     const message = {
       guild: { id: "g" },
-      author: { bot: false },
+      channel: { id: "c" },
+      author: { id: "author", bot: false },
       webhookId: null,
       content: "<@bot> help",
       client: { user: { id: "bot" } },
@@ -24,7 +25,8 @@ describe("mention responder", () => {
     const reply = vi.fn();
     const message = {
       guild: { id: "g" },
-      author: { bot: false },
+      channel: { id: "c" },
+      author: { id: "author", bot: false },
       webhookId: null,
       content: "hello",
       client: { user: { id: "bot" } },

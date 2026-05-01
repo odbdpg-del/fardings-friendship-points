@@ -1,5 +1,6 @@
 import type { Message } from "discord.js";
 import { botBrand } from "../utils/branding.js";
+import { logger } from "../utils/logger.js";
 
 const directMentionOnlyReplies = [
   "You rang? FarDing has entered the friendship ledger.",
@@ -34,7 +35,9 @@ export class MentionResponder {
     if (!message.guild || message.author.bot || message.webhookId) return;
     if (!this.mentionsBot(message)) return;
 
+    logger.info("Detected bot mention", { guildId: message.guild.id, channelId: message.channel.id, authorId: message.author.id });
     await message.reply(this.pickReply(message.content));
+    logger.info("Replied to bot mention", { guildId: message.guild.id, channelId: message.channel.id, authorId: message.author.id });
   }
 
   private mentionsBot(message: Message): boolean {
