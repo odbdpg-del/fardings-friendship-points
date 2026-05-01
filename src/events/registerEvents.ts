@@ -1,11 +1,14 @@
 import type { Client } from "discord.js";
 import { CommandHandler } from "../commands/handler.js";
 import { ScoringService } from "../scoring/scoringService.js";
+import { MentionResponder } from "../services/mentionResponder.js";
 import { VoiceService } from "../services/voiceService.js";
 import { logger } from "../utils/logger.js";
 import { botBrand } from "../utils/branding.js";
 
 export function registerEvents(client: Client, services: { commands: CommandHandler; scoring: ScoringService; voice: VoiceService }): void {
+  const mentionResponder = new MentionResponder();
+
   client.once("ready", () => {
     logger.info(`${botBrand.name} logged in as ${client.user?.tag ?? "unknown bot"}`);
     services.voice.recoverActiveSessions();
@@ -15,6 +18,7 @@ export function registerEvents(client: Client, services: { commands: CommandHand
   });
 
   client.on("messageCreate", (message) => {
+    mentionResponder.maybeReply(message).catch((error) => logger.error("Failed to respond to mention", error));
     services.scoring.scoreMessage(message).catch((error) => logger.error("Failed to score message", error));
   });
 
