@@ -1,0 +1,39 @@
+{
+  "name": "fardings-friendship-points",
+  "version": "1.0.0",
+  "description": "A chaotic but clean Discord engagement bot for FarDing's Friendship Points.",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "register": "tsx src/register-commands.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run typecheck && npm test && npm run build"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "typescript",
+    "sqlite"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/rest": "^2.4.3",
+    "better-sqlite3": "^11.7.0",
+    "discord.js": "^14.17.3",
+    "dotenv": "^16.4.7",
+    "node-cron": "^3.0.3",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.5",
+    "@types/node-cron": "^3.0.11",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
