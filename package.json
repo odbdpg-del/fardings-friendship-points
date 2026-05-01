@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "A chaotic but clean Discord engagement bot for FarDing's Friendship Points.",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "register": "tsx src/register-commands.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
