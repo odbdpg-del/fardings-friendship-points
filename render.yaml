@@ -1,0 +1,25 @@
+services:
+  - type: worker
+    name: fardings-friendship-points
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_PATH
+        value: /data/fardings-friendship-points.sqlite
+      - key: WEEKLY_CRON
+        value: 0 9 * * 1
+      - key: LOG_LEVEL
+        value: info
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: DISCORD_CLIENT_ID
+        sync: false
+      - key: DISCORD_GUILD_ID
+        sync: false
+    disk:
+      name: friendship-data
+      mountPath: /data
+      sizeGB: 1

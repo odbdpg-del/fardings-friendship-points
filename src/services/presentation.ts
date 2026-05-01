@@ -60,6 +60,19 @@ export class PresentationService {
       .setColor(0xc084fc);
   }
 
+  friends(guildId: string, userId: string, username: string): EmbedBuilder {
+    const rows = this.repos.getTopFriends(guildId, userId, 3);
+    return new EmbedBuilder()
+      .setTitle(`${username}'s Friendship Radar`)
+      .setDescription(
+        rows.length
+          ? rows.map((row, i) => this.friendLine(row, i)).join("\n")
+          : "No best-friend signals yet. FarDing is staring at an empty corkboard."
+      )
+      .setFooter({ text: "Replies count as 2 signals. Reactions count as 1 signal." })
+      .setColor(0xec4899);
+  }
+
   config(guildId: string): EmbedBuilder {
     const settings = this.repos.getSettings(guildId);
     const excluded = [...this.repos.getExcludedVoiceChannels(guildId)];
@@ -80,7 +93,7 @@ export class PresentationService {
       .setTitle(`${botBrand.name} Help`)
       .setDescription(`${botBrand.mascotName} hands out points for meaningful chat, replies, reactions, and voice time. Spammy nonsense gets side-eyed by the scoring engine.`)
       .addFields(
-        { name: "Public", value: "`/leaderboard`, `/weekly`, `/profile`, `/stats`, `/help`" },
+        { name: "Public", value: "`/leaderboard`, `/weekly`, `/profile`, `/stats`, `/friends`, `/help`" },
         { name: "Admin", value: "`/config`, `/weekly-post`, `/points`, `/title`" }
       )
       .setColor(0x22c55e);
@@ -93,6 +106,10 @@ export class PresentationService {
 
   private weeklyLine(row: any, index: number): string {
     return `**#${index + 1}** <@${row.user_id}> - ${formatPoints(row.points)} | ${labelForRank(index)}`;
+  }
+
+  private friendLine(row: { targetUserId: string; replies: number; reactions: number; score: number }, index: number): string {
+    return `**#${index + 1}** <@${row.targetUserId}> - ${row.score.toLocaleString()} signals | ${row.replies} replies, ${row.reactions} reactions`;
   }
 }
 

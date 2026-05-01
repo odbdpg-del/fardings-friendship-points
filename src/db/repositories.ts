@@ -29,6 +29,13 @@ export type StatDelta = {
   adminAdjustment?: number;
 };
 
+export type FriendSignal = {
+  targetUserId: string;
+  replies: number;
+  reactions: number;
+  score: number;
+};
+
 export class Repositories {
   constructor(public readonly db: Db) {}
 
@@ -176,6 +183,41 @@ export class Repositories {
     return row?.rank ?? null;
   }
 
+  getTopFriends(guildId: string, userId: string, limit = 3): FriendSignal[] {
+    const rows = this.db
+      .prepare(
+        `
+        SELECT event_type, metadata_json
+        FROM point_events
+        WHERE guild_id = ?
+          AND user_id = ?
+          AND event_type IN ('reply', 'reaction')
+          AND metadata_json IS NOT NULL
+      `
+      )
+      .all(guildId, userId) as Array<{ event_type: "reply" | "reaction"; metadata_json: string }>;
+
+    const signals = new Map<string, FriendSignal>();
+    for (const row of rows) {
+      const targetUserId = this.targetUserIdFromMetadata(row.metadata_json);
+      if (!targetUserId || targetUserId === userId) continue;
+
+      const signal = signals.get(targetUserId) ?? { targetUserId, replies: 0, reactions: 0, score: 0 };
+      if (row.event_type === "reply") {
+        signal.replies += 1;
+        signal.score += 2;
+      } else {
+        signal.reactions += 1;
+        signal.score += 1;
+      }
+      signals.set(targetUserId, signal);
+    }
+
+    return [...signals.values()]
+      .sort((a, b) => b.score - a.score || b.replies - a.replies || b.reactions - a.reactions || a.targetUserId.localeCompare(b.targetUserId))
+      .slice(0, limit);
+  }
+
   getGuildsWithWeeklyRecaps(): GuildSettings[] {
     return this.db.prepare("SELECT * FROM guild_settings WHERE weekly_recap_enabled = 1 AND weekly_recap_channel_id IS NOT NULL").all() as GuildSettings[];
   }
@@ -214,5 +256,14 @@ export class Repositories {
       adminAdjustment: delta.adminAdjustment ?? 0,
       updatedAt: nowIso()
     };
+  }
+
+  private targetUserIdFromMetadata(metadataJson: string): string | null {
+    try {
+      const metadata = JSON.parse(metadataJson) as { targetUserId?: unknown };
+      return typeof metadata.targetUserId === "string" ? metadata.targetUserId : null;
+    } catch {
+      return null;
+    }
   }
 }

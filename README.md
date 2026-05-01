@@ -137,6 +137,7 @@ Public:
 - `/weekly`
 - `/profile [user]`
 - `/stats [user]`
+- `/friends [user]`
 - `/help`
 
 Admin, requiring Manage Server:

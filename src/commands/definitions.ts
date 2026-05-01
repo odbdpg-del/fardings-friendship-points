@@ -13,6 +13,10 @@ export const commandBuilders = [
     .setName("stats")
     .setDescription(`Show detailed ${botBrand.shortName} stats.`)
     .addUserOption((option) => option.setName("user").setDescription("User to inspect.")),
+  new SlashCommandBuilder()
+    .setName("friends")
+    .setDescription("Show a user's top friendship signals.")
+    .addUserOption((option) => option.setName("user").setDescription("User to inspect.")),
   new SlashCommandBuilder().setName("help").setDescription(`Show ${botBrand.name} help.`),
   new SlashCommandBuilder()
     .setName("config")

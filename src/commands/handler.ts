@@ -32,6 +32,9 @@ export class CommandHandler {
       case "stats":
         await this.replyProfile(interaction, true);
         return;
+      case "friends":
+        await this.replyFriends(interaction);
+        return;
       case "help":
         await interaction.reply({ embeds: [this.presentation.help()], ephemeral: true });
         return;
@@ -56,6 +59,11 @@ export class CommandHandler {
     const user = interaction.options.getUser("user") ?? interaction.user;
     const embed = detailed ? this.presentation.stats(interaction.guildId!, user.id, user.username) : this.presentation.profile(interaction.guildId!, user.id, user.username);
     await interaction.reply({ embeds: [embed] });
+  }
+
+  private async replyFriends(interaction: ChatInputCommandInteraction): Promise<void> {
+    const user = interaction.options.getUser("user") ?? interaction.user;
+    await interaction.reply({ embeds: [this.presentation.friends(interaction.guildId!, user.id, user.username)] });
   }
 
   private async handleConfig(interaction: ChatInputCommandInteraction): Promise<void> {
