@@ -32,9 +32,15 @@ const pointsReplies = [
 export class MentionResponder {
   async maybeReply(message: Message): Promise<void> {
     if (!message.guild || message.author.bot || message.webhookId) return;
-    if (!message.client.user || !message.mentions.users.has(message.client.user.id)) return;
+    if (!this.mentionsBot(message)) return;
 
     await message.reply(this.pickReply(message.content));
+  }
+
+  private mentionsBot(message: Message): boolean {
+    const botId = message.client.user?.id;
+    if (!botId) return false;
+    return message.mentions.users.has(botId) || message.content.includes(`<@${botId}>`) || message.content.includes(`<@!${botId}>`);
   }
 
   private pickReply(content: string): string {
