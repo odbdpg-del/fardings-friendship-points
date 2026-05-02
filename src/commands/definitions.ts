@@ -109,7 +109,9 @@ export const commandBuilders = [
         .setName("set")
         .setDescription("Set total points.")
         .addUserOption((option) => option.setName("user").setDescription("Target user.").setRequired(true))
-        .addIntegerOption((option) => option.setName("amount").setDescription("New total.").setRequired(true).setMinValue(0).setMaxValue(adminLimits.maxTotalPoints))
+        .addIntegerOption((option) =>
+          option.setName("amount").setDescription("New total.").setRequired(true).setMinValue(adminLimits.minTotalPoints).setMaxValue(adminLimits.maxTotalPoints)
+        )
         .addStringOption((option) => option.setName("reason").setDescription("Audit reason.").setMaxLength(adminLimits.maxReasonLength))
     ),
   new SlashCommandBuilder()

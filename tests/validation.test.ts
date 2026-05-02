@@ -7,6 +7,11 @@ describe("admin command validation", () => {
     expect(validateIntegerRange("Point value", adminLimits.maxPointValue + 1, 0, adminLimits.maxPointValue)).toContain("between");
   });
 
+  it("allows large negative totals within admin range", () => {
+    expect(validateIntegerRange("Total points", -5_000_000, adminLimits.minTotalPoints, adminLimits.maxTotalPoints)).toBeNull();
+    expect(validateIntegerRange("Total points", adminLimits.minTotalPoints - 1, adminLimits.minTotalPoints, adminLimits.maxTotalPoints)).toContain("between");
+  });
+
   it("cleans audit reasons", () => {
     expect(cleanReason("  too   helpful   ")).toBe("too helpful");
     expect(cleanReason("x".repeat(adminLimits.maxReasonLength + 10))?.length).toBe(adminLimits.maxReasonLength);

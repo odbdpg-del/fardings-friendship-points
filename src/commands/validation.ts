@@ -3,7 +3,8 @@ export const adminLimits = {
   maxCooldownSeconds: 86_400,
   maxMinimumTextLength: 500,
   maxDailyVoiceCapHours: 24,
-  maxPointAdjustment: 1_000_000,
+  maxPointAdjustment: 100_000_000,
+  minTotalPoints: -100_000_000,
   maxTotalPoints: 100_000_000,
   maxReasonLength: 180,
   maxTitleLength: 64

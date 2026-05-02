@@ -149,7 +149,7 @@ export class CommandHandler {
     const reason = cleanReason(interaction.options.getString("reason"));
 
     const max = sub === "set" ? adminLimits.maxTotalPoints : adminLimits.maxPointAdjustment;
-    const min = sub === "set" ? 0 : 1;
+    const min = sub === "set" ? adminLimits.minTotalPoints : 1;
     const error = validateIntegerRange(sub === "set" ? "Total points" : "Point adjustment", amount, min, max);
     if (await this.replyIfValidationError(interaction, error)) return;
 
